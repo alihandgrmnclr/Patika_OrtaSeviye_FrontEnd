@@ -1,12 +1,13 @@
 # Ders içeriği
-1.Callback functions
-1.async-await
-1.Array functions
-    1.push
-    1.map
-    1.reduce
-    1.find
-    1.filter
-    1.some
-    1.every
-    1.includes
+1. Callback functions
+2. async-await
+3. Array functions
+    1. push
+    2. map
+    3. reduce
+    4. find
+    5. filter
+    6. some
+    7. every
+    8. includes
+
