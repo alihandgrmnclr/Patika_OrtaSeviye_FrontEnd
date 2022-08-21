@@ -16,7 +16,7 @@ function Users() {
     return (
         <div>
             <h1>Users</h1>
-            {isLoading && <div>Loading...</div>}
+            {isLoading && <div>Loading...</div>}                            {/* isLoading true ise gözüküyor */}
             {users.map((user) => <div key={user.id}>{user.name}</div>)}
         </div>
     )
