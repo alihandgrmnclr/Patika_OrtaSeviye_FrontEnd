@@ -1,63 +1,64 @@
-import * as React from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import "./App.css";
+import './App.css';
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  NavLink
+} from "react-router-dom";
 
-//pages
-import Home from "./components/Home"
-import Users from "./components/Users"
-import About from "./components/About"
-import User from "./components/User"
+import About from './components/About'
+import Users from './components/Users'
+import Home from './components/Home'
+import Error from './components/Error'
 
 
 function App() {
+
+  const activeStyle = {
+    textDecoration: "underline",
+    backgroundColor: "#ddd",
+    fontSize: 18,
+  }
+
+  const activeClassName = "nav"
+
   return (
     <div className="App">
-      <h1>Welcome to React Router!</h1>
+      {/* Rotuing işlemleri için buranın altında belirtiyoruz */}
+      <Router>
+        <div>
+          <nav>
+            <ul>
+              <li>
+                {/* a href verseydik burası sayfa yenileyecekti onun yerine React'e özgü olan Link ya da NavLink hook'larını kullanıyoruz. 
+                  Aralarındaki farkı ise style tanımlamalarında NavLink bize aktif olan linke özel class ya da style tanımlaması sunması. Başkar bir farkı yok aralarında */}
 
-      <h3><Link to="/">Home</Link></h3>
-      <h3><Link to="/users">Users</Link></h3>
-      <h3><Link to="/about">About</Link></h3>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/user/:id" element={<User />} />
-      </Routes>
+                <NavLink style={({ isActive }) => isActive ? activeStyle : undefined} to="/">Home</NavLink>
+              </li>
+              <li>
+                <NavLink className={({ isActive }) => isActive ? activeClassName : undefined} to="/about">About</NavLink>
+              </li>
+              <li>
+                <NavLink className={({ isActive }) => isActive ? activeClassName : undefined} to="/users">Users</NavLink>
+              </li>
+            </ul>
+          </nav>
+          {/* Butona basıldıktan sonra nereye gidileceğini gösteren yol haritamızı burada tanımlıyoruz. Eski adı switch. */}
+          <Routes>
+            {/* Buradaki elementler bir sayfayı temsil ediyor. Şart hangisine uyuyorsa onu çalıştırır. */}
+            <Route path="/" element={<Home />} /> | {" "}
+            <Route path="/about" element={<About />} />
+            <Route path="/users/*" element={<Users />} /> {/* Nested yani iç içe route için başlangıçta bu yapıyı kullanmamız gerekiyor */}
+            <Route path='*' element={<Error />} />  {/* Var olmayan bir sayfa açılırsa error sayfası gelecek */}
+          </Routes>
+        </div>
+      </Router>
     </div>
   );
 }
 
-// function Home() {
-//   return (
-//     <>
-//       <main>
-//         <h2>Welcome to the homepage!</h2>
-//         <p>You can do this, I believe in you.</p>
-//       </main>
-//       <nav>
-//         <Link to="/about">About</Link>
-//       </nav>
-//     </>
-//   );
-// }
 
-// function About() {
-//   return (
-//     <>
-//       <main>
-//         <h2>Who are we?</h2>
-//         <p>
-//           That feels like an existential question, don't you
-//           think?
-//         </p>
-//       </main>
-//       <nav>
-//         <Link to="/">Home</Link>
-//       </nav>
-//     </>
-//   );
-// }
 
 
 export default App;

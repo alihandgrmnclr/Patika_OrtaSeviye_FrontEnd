@@ -1,31 +1,50 @@
-import { Link } from 'react-router-dom'
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { NavLink, Routes, Route, Outlet } from 'react-router-dom'
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+import User from './User'
 
 function Users() {
 
-    const [loading, setLoading] = useState(true);
-    const [users, setUsers] = useState([]);
+    const [user, setUser] = useState([])
+    const [loading, setLoading] = useState(true)
 
+    // Backend'e gidip ilgili veriyi alıyoruz
     useEffect(() => {
         axios("https://jsonplaceholder.typicode.com/users")
-            .then((res) => { setUsers(res.data) })
-            .catch((err) => console.log(err))
-            .finally(() => setLoading(false));
-    }, [])
+        .then( (res) => setUser(res.data) )
+        .catch( (e) => console.log(e))
+        .finally( () => setLoading(false) )
+    },[])
 
-    return (
+    const activeClassName = "liElement"
+
+  return (
+    <div>
+        <h3>Users</h3>
         <div>
-            <h1>Users</h1>
-            <ul>
-                {loading && <div>Loading...</div>}
-                {users.map((user) => (
-                    <li key={user.id}>
-                        <Link to={`/user/${user.id}`}>{user.name}</Link>
-                    </li>))}
-            </ul>
+            {loading && <div>Loading... </div> }
         </div>
-    )
+        <ul>
+            {/* Backendden aldığımız verileri map ile listeliyoruz */}
+            {
+                user.map( (res) => (
+                    <li key={res.id}>
+                        <NavLink className={ ({isActive}) => isActive ? activeClassName : undefined}  to={`${res.id}`}  > {res.name} </NavLink>
+                    </li>
+                ) )
+            }
+        </ul>
+        
+        <Outlet />
+        {/* İç içe Route yapısını kullanıyoruz. Normalde root gider ama burada Users tanımlanmaya devam etmesini istiyoruz. İstersek altında bir route yapsı daha oluşturabiliriz. */}
+        <Routes>
+            <Route path=':id' element={<User />} />
+        </Routes>
+          
+
+    </div>
+  )
 }
 
 export default Users
