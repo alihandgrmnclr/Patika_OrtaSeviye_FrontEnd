@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import {Outlet} from 'react-router-dom'
+
 
 function User() {
     //Gelen id'yi çekmek için useParams tanımını kullanmak zorundayız.
@@ -19,7 +19,7 @@ function User() {
         .then( (res) => setUser(res.data) )
         .catch( (e) => console.log("Hata", e))
         .finally(() => setLoading(false))
-    },[id]) // id yazmasaydık her "next user" bastığımızda sayfa değişmezdi
+    },[id]) // id'yi takip ediyoruz'
 
     return (
         <div>
@@ -33,7 +33,7 @@ function User() {
                </code>}
 
             </p>
-            {/* Bir sonraki kullanıcıyı göstermek için burayı kullandık. Burada NavLink kullanmaya gerek yok çünkü bir stillendirme yapmayacağız */}
+           
             <div>
                {parseInt(id)<10 ? <Link to={`/users/${parseInt(id)+1}`}>Next User {parseInt(id)+1} </Link> : <Link to={`/users/${1}`}> Turn Head </Link>}
             </div>

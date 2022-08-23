@@ -1,8 +1,7 @@
-import { NavLink, Routes, Route, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import User from './User'
 
 function Users() {
 
@@ -17,8 +16,6 @@ function Users() {
         .finally( () => setLoading(false) )
     },[])
 
-    const activeClassName = "liElement"
-
   return (
     <div>
         <h3>Users</h3>
@@ -26,23 +23,17 @@ function Users() {
             {loading && <div>Loading... </div> }
         </div>
         <ul>
-            {/* Backendden aldığımız verileri map ile listeliyoruz */}
+            {/* Backendden aldığımız verileri map ile listeliyoruz. array işlemlerinde en dıştaki elemanda "key" kullanımı zorunlu */}
             {
                 user.map( (res) => (
                     <li key={res.id}>
-                        <NavLink className={ ({isActive}) => isActive ? activeClassName : undefined}  to={`${res.id}`}  > {res.name} </NavLink>
+                        <NavLink to={`${res.id}`}  > {res.name} </NavLink>
                     </li>
                 ) )
             }
         </ul>
-        
-        <Outlet />
-        {/* İç içe Route yapısını kullanıyoruz. Normalde root gider ama burada Users tanımlanmaya devam etmesini istiyoruz. İstersek altında bir route yapsı daha oluşturabiliriz. */}
-        <Routes>
-            <Route path=':id' element={<User />} />
-        </Routes>
-          
 
+        <Outlet /> {/* Child element çağırır */}
     </div>
   )
 }
