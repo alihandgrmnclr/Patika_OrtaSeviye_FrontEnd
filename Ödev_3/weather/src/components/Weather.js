@@ -1,5 +1,5 @@
 
-function Weather() {
+function Weather(values) {
   return (
     <div>
       <div className="container">
