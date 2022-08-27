@@ -1,58 +1,54 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css"
 import axios from "axios"
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
-import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { useState } from 'react';
 
-import Weather from './components/Weather';
+
 
 function App() {
 
-  const apiKey = "40292a35611f3cc34715fd0dce08e194";
-  const [weatherData, setWeatherData] = useState([{}]);
+  const apiKey = process.env.REACT_APP_WEATHER_API_KEY;   // hide the api key in .env file and save it in gitignore folder
+  const [weather, setWeather] = useState([{}]);
   const [city, setCity] = useState("");
 
-  const getWeather = () => {
-    axios.get(` https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`)
-      .then((data) => { setWeatherData(data) })
-    console.log(weatherData);
+  const getData = () => {
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+      .then((response) => {
+        setWeather(response)
+        console.log(response.data);
+      })
+      .catch((error) => (console.log(error)));
   }
 
   return (
-    <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-6 offset-3 mt-5 d-flex justify-content-center">
-            <input
-              placeholder="City Name"
-              onChange={(e) => setCity(e.target.value)}
-              value={city}
-            />
-            <button onClick={getWeather}>Search</button>
+    <div className='text-center mt-5'>
+      <input placeholder='City Name' value={city} onChange={(e) => setCity(e.target.value)} />
+      <button onClick={getData}>Search</button>
 
+      {
+        weather.length < 2 ?
+          <div className="mt-2">
+            Please enter city name
           </div>
-          <div className="container mt-2 text-center">
-            {weatherData.length < 3 ? <div>Please enter the city name.</div> :
-              <div className="text-center">
-                <h3>{weatherData.data.city.name}, {weatherData.data.city.country} </h3><br />
-                <p>{weatherData.data.list[0].dt_txt}, <b>{Math.round(weatherData.data.list[0].main.temp)}°C</b> {weatherData.data.list[0].weather[0].main}</p>
-
-                <p>{weatherData.data.list[1].dt_txt}, <b>{Math.round(weatherData.data.list[1].main.temp)}°C</b> {weatherData.data.list[1].weather[0].main}</p>
-
-                <p>{weatherData.data.list[2].dt_txt}, <b>{Math.round(weatherData.data.list[2].main.temp)}°C</b> {weatherData.data.list[2].weather[0].main}</p>
-
-                <p>{weatherData.data.list[3].dt_txt}, <b>{Math.round(weatherData.data.list[3].main.temp)}°C</b> {weatherData.data.list[3].weather[0].main}</p>
-
-                <p>{weatherData.data.list[4].dt_txt}, <b>{Math.round(weatherData.data.list[4].main.temp)}°C</b> {weatherData.data.list[4].weather[0].main}</p>
-
-              </div>}
-
-            <div className="mt-3">
-              <Weather values={3} />
+          :
+          <div className="container mt-3">
+            <div className="row">
+              <div className="col-sm-12 text-center">
+                {weather.data.name}, {weather.data.sys.country}
+              </div>
+              <div className="col-sm-4 offset-4 text-center">
+                {Math.round(weather.data.main.temp)} °C
+              </div>
+              <div className="col-sm-4 offset-4 text-center">
+                {weather.data.weather[0].description}
+              </div>
+              <div>
+                {<img src={`http://openweathermap.org/img/wn/${weather.data.weather[0].icon}@2x.png`} alt="" />}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+      }
     </div>
   );
 }
